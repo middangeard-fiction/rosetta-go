@@ -8,17 +8,22 @@ import (
 	"strings"
 )
 
+type message struct {
+	Message     string `json:"message"`
+	Description string `json:"description,omitempty"`
+}
+
 // Translation - localization structure
 type translation struct {
 	locales      []string
-	translations map[string]map[string]string
+	translations map[string]map[string]message
 }
 
 var trans *translation
 
 // InitLocales - initiate locales from the folder
 func InitLocales(trPath string) error {
-	trans = &translation{translations: make(map[string]map[string]string)}
+	trans = &translation{translations: make(map[string]map[string]message)}
 	return loadTranslations(trPath)
 }
 
@@ -26,11 +31,11 @@ func InitLocales(trPath string) error {
 func Tr(locale string, trKey string) string {
 	trValue, ok := trans.translations[locale][trKey]
 	if ok {
-		return trValue
+		return trValue.Message
 	}
 	trValue, ok = trans.translations["en"][trKey]
 	if ok {
-		return trValue
+		return trValue.Message
 	}
 	return trKey
 }
@@ -70,7 +75,7 @@ func loadTranslations(trPath string) error {
 }
 
 func loadFileToMap(filename string) error {
-	var objmap map[string]string
+	var objmap map[string]message
 
 	localName := strings.Replace(filepath.Base(filename), ".json", "", 1)
 

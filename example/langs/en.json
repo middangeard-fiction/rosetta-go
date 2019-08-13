@@ -1,4 +1,8 @@
 {
-    "hello_world":"Hello World",
-    "find_more":"Find more information about the project on the website %s"
+    "hello_world": {
+        "message": "Hello World"
+    },
+    "find_more": {
+        "message": "Find more information about the project on the website %s"
+    }
 }
