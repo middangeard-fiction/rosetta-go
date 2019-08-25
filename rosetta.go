@@ -22,15 +22,17 @@ type translation struct {
 }
 
 var trans *translation
+var locale string
 
-// InitLocales - initiate locales from the folder
-func InitLocales(trPath string) error {
+// Init - initiate locales from the folder
+func Init(localesPath, lang string) error {
+	locale = lang
 	trans = &translation{translations: make(map[string]map[string]message)}
-	return loadTranslations(trPath)
+	return loadTranslations(localesPath)
 }
 
-// Tr - translate for current locale
-func Tr(locale string, trKey string) string {
+// GetMessage - translate for current locale
+func GetMessage(trKey string) string {
 	trValue, ok := trans.translations[locale][trKey]
 	if ok {
 		return trValue.Message

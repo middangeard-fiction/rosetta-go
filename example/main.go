@@ -8,21 +8,19 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	lang := i18n.DetectLanguage(r.Header.Get("Accept-Language"))
-	fmt.Fprintf(w, "<html><head><title> %s </title></head><body>", i18n.Tr(lang, "hello_world"))
-	fmt.Fprintf(w, "<h2> %s </h2>", i18n.Tr(lang, "hello_world"))
+	err := i18n.Init("langs", r.Header.Get("Accept-Language"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Fprintf(w, "<html><head><title> %s </title></head><body>", i18n.GetMessage("hello_world"))
+	fmt.Fprintf(w, "<h2> %s </h2>", i18n.GetMessage("hello_world"))
 	githubLink := "https://github.com/bykovme/i18n"
 	link := fmt.Sprintf(`<a href="%s">%s</a>`, githubLink, githubLink)
-	fmt.Fprintf(w, i18n.Tr(lang, "find_more"), link)
+	fmt.Fprintf(w, i18n.GetMessage("find_more"), link)
 	fmt.Fprint(w, "</body></html>")
 }
 
 func main() {
-	err := i18n.InitLocales("langs")
-	if err != nil {
-		panic(err)
-	}
-
 	fmt.Println(i18n.GetUILanguage())
 
 	http.HandleFunc("/", handler)
